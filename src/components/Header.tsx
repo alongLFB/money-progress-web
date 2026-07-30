@@ -47,11 +47,8 @@ export function Header() {
         </div>
 
         <div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+          <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">
             {t('appName')}
-            <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-300">
-              Next.js 16
-            </span>
           </h1>
           <p className="text-xs font-medium text-slate-500 dark:text-slate-400 max-w-md">
             {t('tagline')}
