@@ -40,6 +40,7 @@ interface AppContextType {
   earnedToday: number;
   nowMinutes: number;
   isWorkTimeValid: boolean;
+  isMounted: boolean;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -56,14 +57,15 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [compactMode, setCompactMode] = useState<boolean>(false);
   const [menubarRunning, setMenubarRunning] = useState<boolean>(true);
 
-  // Wizard state
   const [isConfigured, setIsConfigured] = useState<boolean>(false);
   const [isEditingConfig, setIsEditingConfig] = useState<boolean>(false);
+  const [isMounted, setIsMounted] = useState<boolean>(false);
 
   const [currentTime, setCurrentTime] = useState<Date>(() => new Date());
 
   // Load stored settings on mount
   useEffect(() => {
+    setIsMounted(true);
     setCurrentTime(new Date());
     try {
       const sConfigured = localStorage.getItem('money_progress_configured');
@@ -247,6 +249,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         earnedToday,
         nowMinutes,
         isWorkTimeValid,
+        isMounted,
       }}
     >
       {children}

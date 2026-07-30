@@ -24,6 +24,7 @@ export function Timeline({ interactive }: TimelineProps) {
     nowMinutes,
     isConfigured,
     isEditingConfig,
+    isMounted,
   } = useApp();
 
   // Dragging is enabled ONLY during setup/editing phase, or if explicitly enabled
@@ -182,15 +183,17 @@ export function Timeline({ interactive }: TimelineProps) {
             </div>
           )}
 
-          {/* Current Time Pin (Red Indicator) */}
-          <div
-            className="absolute top-0 bottom-0 w-0.5 bg-rose-500 dark:bg-rose-400 z-10 pointer-events-none shadow-[0_0_8px_rgba(244,63,94,0.8)]"
-            style={{ left: `${nowPct}%` }}
-          >
-            <div className="absolute -top-5 -translate-x-1/2 bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-md whitespace-nowrap">
-              {t('nowTime', { time: minutesToTimeStr(nowMinutes) })}
+          {/* Current Time Pin (Red Indicator) - Render only after client mount to prevent SSR timezone jump */}
+          {isMounted && (
+            <div
+              className="absolute top-0 bottom-0 w-0.5 bg-rose-500 dark:bg-rose-400 z-10 pointer-events-none shadow-[0_0_8px_rgba(244,63,94,0.8)] transition-none"
+              style={{ left: `${nowPct}%` }}
+            >
+              <div className="absolute -top-5 -translate-x-1/2 bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-md whitespace-nowrap transition-none">
+                {t('nowTime', { time: minutesToTimeStr(nowMinutes) })}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Handle: Work Start (Blue Pin) */}
           <div
