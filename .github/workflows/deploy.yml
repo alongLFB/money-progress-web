@@ -1,0 +1,34 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - master # 触发的分支
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH and Deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}     # 服务器IP
+          username: ${{ secrets.SERVER_USER }} # 服务器用户名
+          key: ${{ secrets.SERVER_SSH_KEY }}   # 服务器私钥
+          port: ${{ secrets.SERVER_PORT || 22 }}
+          script: |
+            mkdir -p ~/github
+            cd ~/github
+            if [ ! -d "money-progress-web" ]; then
+              git clone https://github.com/alongLFB/money-progress-web.git
+            fi
+            cd money-progress-web
+            git pull origin master
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            rm -rf .next
+            npm ci
+            npm run build
+            export APP_PORT=$(grep -E '^PORT=' .env.local | cut -d '=' -f2)
+            export APP_PORT=${APP_PORT:-3025}
+            pm2 restart money-progress-web --update-env || pm2 start npm --name "money-progress-web" -- start -- -p $APP_PORT
