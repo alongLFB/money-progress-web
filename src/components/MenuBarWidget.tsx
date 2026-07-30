@@ -14,12 +14,14 @@ export function MenuBarWidget() {
     currencyUnit,
     menubarRunning,
     setMenubarRunning,
-    compactMode,
+    isConfigured,
+    isEditingConfig,
   } = useApp();
 
   const [isMinimized, setIsMinimized] = useState(false);
 
-  if (!menubarRunning) return null;
+  // Hide widget if status bar widget is disabled, or if setup is not yet completed / currently editing
+  if (!menubarRunning || !isConfigured || isEditingConfig) return null;
 
   const formattedPercent = (todayPercent * 100).toFixed(4);
   const formattedEarned = earnedToday.toFixed(2);
