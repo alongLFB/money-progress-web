@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { Search, X, Check, PlusCircle } from 'lucide-react';
 import { CURRENCIES, CurrencyItem } from '@/data/currencies';
 import { useTranslations, useLocale } from 'next-intl';
@@ -16,14 +17,19 @@ export function CurrencyModal({ isOpen, onClose, selectedCurrency, onSelect }: C
   const t = useTranslations();
   const locale = useLocale();
   const [search, setSearch] = useState('');
+  const [mounted, setMounted] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Close on ESC key & Reset / Focus search when opened
   useEffect(() => {
     if (!isOpen) return;
 
     setSearch('');
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       inputRef.current?.focus();
     }, 100);
 
@@ -34,10 +40,13 @@ export function CurrencyModal({ isOpen, onClose, selectedCurrency, onSelect }: C
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
   const trimmedSearch = search.trim();
   const searchLower = trimmedSearch.toLowerCase();
@@ -62,17 +71,17 @@ export function CurrencyModal({ isOpen, onClose, selectedCurrency, onSelect }: C
     onClose();
   };
 
-  return (
+  const modalContent = (
     <div
       onClick={onClose}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm animate-in fade-in duration-200"
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-200"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] animate-in zoom-in-95 duration-200"
+        className="w-full max-w-md h-[80vh] max-h-[580px] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-200 relative z-[10000]"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800 shrink-0">
           <h3 className="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
             <span>💱</span> {t('selectCurrency')}
           </h3>
@@ -85,7 +94,7 @@ export function CurrencyModal({ isOpen, onClose, selectedCurrency, onSelect }: C
         </div>
 
         {/* Search Bar */}
-        <div className="p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
+        <div className="p-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 shrink-0">
           <div className="relative">
             <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
@@ -104,8 +113,8 @@ export function CurrencyModal({ isOpen, onClose, selectedCurrency, onSelect }: C
           </div>
         </div>
 
-        {/* Currency List */}
-        <div className="flex-1 overflow-y-auto p-2 space-y-1 divide-y divide-slate-100 dark:divide-slate-800/40">
+        {/* Currency Scrollable List */}
+        <div className="flex-1 overflow-y-auto min-h-0 p-2 space-y-1 divide-y divide-slate-100 dark:divide-slate-800/40">
           {/* Custom option if user typed something not matching exactly */}
           {trimmedSearch && !isExactPresetMatch && (
             <button
@@ -167,7 +176,7 @@ export function CurrencyModal({ isOpen, onClose, selectedCurrency, onSelect }: C
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-slate-100 dark:border-slate-800 text-right bg-slate-50/50 dark:bg-slate-900/50">
+        <div className="p-4 border-t border-slate-100 dark:border-slate-800 text-right bg-slate-50/50 dark:bg-slate-900/50 shrink-0">
           <button
             onClick={onClose}
             className="px-4 py-2 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-xs font-bold text-slate-700 dark:text-slate-300 rounded-xl transition-all cursor-pointer"
@@ -178,4 +187,6 @@ export function CurrencyModal({ isOpen, onClose, selectedCurrency, onSelect }: C
       </div>
     </div>
   );
+
+  return createPortal(modalContent, document.body);
 }
