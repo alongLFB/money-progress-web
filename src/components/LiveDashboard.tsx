@@ -21,7 +21,20 @@ export function LiveDashboard() {
 
   const [quoteIndex, setQuoteIndex] = useState(0);
 
-  const quotes = [t('touchFish1'), t('touchFish2'), t('touchFish3')];
+  const quotes = [
+    t('touchFish1'),
+    t('touchFish2'),
+    t('touchFish3'),
+    t('touchFish4'),
+    t('touchFish5'),
+    t('touchFish6'),
+    t('touchFish7'),
+    t('touchFish8'),
+    t('touchFish9'),
+    t('touchFish10'),
+    t('touchFish11'),
+    t('touchFish12'),
+  ];
 
   // Rotate fun status quote every 10 seconds
   useEffect(() => {
