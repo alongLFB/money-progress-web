@@ -5,6 +5,10 @@ on:
     branches:
       - master # 触发的分支
 
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -19,16 +23,42 @@ jobs:
           script: |
             mkdir -p ~/github
             cd ~/github
+            
             if [ ! -d "money-progress-web" ]; then
               git clone https://github.com/alongLFB/money-progress-web.git
+              cd money-progress-web
+            else
+              cd money-progress-web
+              git fetch origin master
+              git reset --hard origin/master
             fi
-            cd money-progress-web
-            git pull origin master
+
+            if [ -n "${{ secrets.ENV_FILE }}" ]; then
+              echo "${{ secrets.ENV_FILE }}" > .env.local
+            fi
+
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+            # 从服务器本地现有的 .env.local 或 .env 文件中提取 PORT，未提取到则默认 3025
+            APP_PORT=3025
+            ENV_FILE=""
+            if [ -f ".env.local" ]; then
+              ENV_FILE=".env.local"
+            elif [ -f ".env" ]; then
+              ENV_FILE=".env"
+            fi
+
+            if [ -n "$ENV_FILE" ]; then
+              EXTRACTED_PORT=$(grep -E '^PORT=' "$ENV_FILE" | cut -d '=' -f2 | tr -d '\r" ' || true)
+              if [ -n "$EXTRACTED_PORT" ]; then
+                APP_PORT=$EXTRACTED_PORT
+              fi
+            fi
+
             rm -rf .next
             npm ci
             npm run build
-            export APP_PORT=$(grep -E '^PORT=' .env.local | cut -d '=' -f2)
-            export APP_PORT=${APP_PORT:-3025}
-            pm2 restart money-progress-web --update-env || pm2 start npm --name "money-progress-web" -- start -- -p $APP_PORT
+
+            pm2 reload money-progress-web --update-env || pm2 start npm --name "money-progress-web" -- start -- -p $APP_PORT
+            pm2 save
