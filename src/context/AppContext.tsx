@@ -148,8 +148,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setIsHaveNoonBreak(false);
     setNoonBreakStartMinutes(12 * 60);
     setNoonBreakEndMinutes(14 * 60);
-    setMonthPaid(20000);
-    setDayWorkOfMonth(20);
+    setMonthPaid(3000);
+    setDayWorkOfMonth(22);
     setCurrencyUnit('CNY');
     setCompactMode(false);
     setMenubarRunning(true);
