@@ -3,9 +3,13 @@
 import React, { useRef, useState, useCallback } from 'react';
 import { useApp } from '@/context/AppContext';
 import { useTranslations } from 'next-intl';
-import { Sun, Coffee, Clock } from 'lucide-react';
+import { Coffee, Clock, Lock } from 'lucide-react';
 
-export function Timeline() {
+interface TimelineProps {
+  interactive?: boolean;
+}
+
+export function Timeline({ interactive }: TimelineProps) {
   const t = useTranslations();
   const {
     workStartMinutes,
@@ -18,7 +22,13 @@ export function Timeline() {
     noonBreakEndMinutes,
     setNoonBreakEndMinutes,
     nowMinutes,
+    isConfigured,
+    isEditingConfig,
   } = useApp();
+
+  // Dragging is enabled ONLY during setup/editing phase, or if explicitly enabled
+  const isInteractive =
+    interactive !== undefined ? interactive : !isConfigured || isEditingConfig;
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeHandle, setActiveHandle] = useState<
@@ -48,13 +58,14 @@ export function Timeline() {
     handle: 'start' | 'end' | 'noonStart' | 'noonEnd',
     e: React.PointerEvent
   ) => {
+    if (!isInteractive) return;
     e.preventDefault();
     setActiveHandle(handle);
     (e.target as HTMLElement).setPointerCapture(e.pointerId);
   };
 
   const handlePointerMove = (e: React.PointerEvent) => {
-    if (!activeHandle) return;
+    if (!isInteractive || !activeHandle) return;
     const mins = calculateMinsFromX(e.clientX);
     if (activeHandle === 'start') {
       setWorkStartMinutes(Math.min(mins, workEndMinutes - 30));
@@ -95,8 +106,13 @@ export function Timeline() {
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
           <Clock className="w-4 h-4 text-blue-500" />
-          <h2 className="text-xs font-bold text-slate-700 dark:text-slate-200">
+          <h2 className="text-xs font-bold text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
             24H 交互时间轴 (00:00 - 24:00)
+            {!isInteractive && (
+              <span className="text-[10px] font-normal px-2 py-0.5 rounded-full bg-slate-200/80 dark:bg-slate-700 text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                <Lock className="w-2.5 h-2.5" /> 锁定中 (修改配置可调整)
+              </span>
+            )}
           </h2>
         </div>
         <div className="flex items-center gap-3 text-xs font-semibold text-slate-500 dark:text-slate-400">
@@ -117,13 +133,15 @@ export function Timeline() {
         </div>
       </div>
 
-      {/* Main Interactive Track */}
+      {/* Main Track */}
       <div className="relative pt-6 pb-2">
         <div
           ref={containerRef}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
-          className="relative h-10 w-full bg-slate-200/80 dark:bg-slate-800 rounded-2xl cursor-pointer select-none overflow-visible shadow-inner flex items-center border border-slate-300/40 dark:border-slate-700/40"
+          className={`relative h-10 w-full bg-slate-200/80 dark:bg-slate-800 rounded-2xl select-none overflow-visible shadow-inner flex items-center border border-slate-300/40 dark:border-slate-700/40 ${
+            isInteractive ? 'cursor-pointer' : 'cursor-default'
+          }`}
         >
           {/* Hour grid lines & labels */}
           <div className="absolute inset-0 flex justify-between px-1 pointer-events-none">
@@ -177,7 +195,9 @@ export function Timeline() {
           {/* Handle: Work Start (Blue Pin) */}
           <div
             onPointerDown={(e) => handlePointerDown('start', e)}
-            className="absolute top-1/2 -translate-y-1/2 z-20 cursor-grab active:cursor-grabbing hover:scale-110 transition-transform"
+            className={`absolute top-1/2 -translate-y-1/2 z-20 transition-transform ${
+              isInteractive ? 'cursor-grab active:cursor-grabbing hover:scale-110' : 'cursor-default'
+            }`}
             style={{ left: `calc(${startPct}% - 12px)` }}
           >
             <div className="w-6 h-10 bg-gradient-to-b from-blue-400 to-blue-600 rounded-xl shadow-lg border-2 border-white dark:border-slate-900 flex items-center justify-center text-white">
@@ -191,7 +211,9 @@ export function Timeline() {
           {/* Handle: Work End (Green Pin) */}
           <div
             onPointerDown={(e) => handlePointerDown('end', e)}
-            className="absolute top-1/2 -translate-y-1/2 z-20 cursor-grab active:cursor-grabbing hover:scale-110 transition-transform"
+            className={`absolute top-1/2 -translate-y-1/2 z-20 transition-transform ${
+              isInteractive ? 'cursor-grab active:cursor-grabbing hover:scale-110' : 'cursor-default'
+            }`}
             style={{ left: `calc(${endPct}% - 12px)` }}
           >
             <div className="w-6 h-10 bg-gradient-to-b from-emerald-400 to-emerald-600 rounded-xl shadow-lg border-2 border-white dark:border-slate-900 flex items-center justify-center text-white">
@@ -207,7 +229,9 @@ export function Timeline() {
             <>
               <div
                 onPointerDown={(e) => handlePointerDown('noonStart', e)}
-                className="absolute top-1/2 -translate-y-1/2 z-20 cursor-grab active:cursor-grabbing hover:scale-110 transition-transform"
+                className={`absolute top-1/2 -translate-y-1/2 z-20 transition-transform ${
+                  isInteractive ? 'cursor-grab active:cursor-grabbing hover:scale-110' : 'cursor-default'
+                }`}
                 style={{ left: `calc(${noonStartPct}% - 10px)` }}
               >
                 <div className="w-5 h-8 bg-gradient-to-b from-amber-400 to-amber-600 rounded-lg shadow-md border border-white dark:border-slate-900 flex items-center justify-center">
@@ -220,7 +244,9 @@ export function Timeline() {
 
               <div
                 onPointerDown={(e) => handlePointerDown('noonEnd', e)}
-                className="absolute top-1/2 -translate-y-1/2 z-20 cursor-grab active:cursor-grabbing hover:scale-110 transition-transform"
+                className={`absolute top-1/2 -translate-y-1/2 z-20 transition-transform ${
+                  isInteractive ? 'cursor-grab active:cursor-grabbing hover:scale-110' : 'cursor-default'
+                }`}
                 style={{ left: `calc(${noonEndPct}% - 10px)` }}
               >
                 <div className="w-5 h-8 bg-gradient-to-b from-amber-500 to-amber-700 rounded-lg shadow-md border border-white dark:border-slate-900 flex items-center justify-center">

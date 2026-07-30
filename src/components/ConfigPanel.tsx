@@ -131,7 +131,7 @@ export function ConfigPanel() {
       {/* Time Controls & Timeline Section */}
       <div className="pt-2 border-t border-slate-100 dark:border-slate-800/60 space-y-4">
         {/* Visual 24H Interactive Timeline placed directly ABOVE time input options */}
-        <Timeline />
+        <Timeline interactive={true} />
 
         {/* Work Start & End Time Input Pickers */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -34,7 +34,7 @@ export default function Home() {
           /* Step 2: Main Live Progress Dashboard */
           <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300">
             <LiveDashboard />
-            <Timeline />
+            <Timeline interactive={false} />
           </div>
         )}
       </div>
