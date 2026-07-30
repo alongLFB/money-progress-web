@@ -14,28 +14,11 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>('light');
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-    const saved = localStorage.getItem('money_progress_theme') as Theme;
-    if (saved === 'dark' || saved === 'light') {
-      setThemeState(saved);
-      if (saved === 'dark') {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-    } else {
-      const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      const initialTheme = systemDark ? 'dark' : 'light';
-      setThemeState(initialTheme);
-      if (systemDark) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-    }
+    // Read the current class set by the blocking inline script in <head>
+    const isDark = document.documentElement.classList.contains('dark');
+    setThemeState(isDark ? 'dark' : 'light');
   }, []);
 
   const setTheme = (newTheme: Theme) => {
