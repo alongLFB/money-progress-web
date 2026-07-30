@@ -60,7 +60,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [isConfigured, setIsConfigured] = useState<boolean>(false);
   const [isEditingConfig, setIsEditingConfig] = useState<boolean>(false);
 
-  const [currentTime, setCurrentTime] = useState<Date | null>(null);
+  const [currentTime, setCurrentTime] = useState<Date>(() => new Date());
 
   // Load stored settings on mount
   useEffect(() => {
@@ -177,36 +177,33 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const coinPerSecond = effectiveWorkSeconds > 0 ? coinPerDay / effectiveWorkSeconds : 0;
 
   // Real-time status for today
-  let nowMinutes = 0;
-  let passedSeconds = 0;
-  if (currentTime) {
-    nowMinutes =
-      currentTime.getHours() * 60 +
-      currentTime.getMinutes() +
-      currentTime.getSeconds() / 60 +
-      currentTime.getMilliseconds() / 60000;
+  const nowMinutes =
+    currentTime.getHours() * 60 +
+    currentTime.getMinutes() +
+    currentTime.getSeconds() / 60 +
+    currentTime.getMilliseconds() / 60000;
 
-    if (isHaveNoonBreak) {
-      if (nowMinutes <= workStartMinutes) {
-        passedSeconds = 0;
-      } else if (nowMinutes > workStartMinutes && nowMinutes < noonBreakStartMinutes) {
-        passedSeconds = (nowMinutes - workStartMinutes) * 60;
-      } else if (nowMinutes >= noonBreakStartMinutes && nowMinutes <= noonBreakEndMinutes) {
-        passedSeconds = (noonBreakStartMinutes - workStartMinutes) * 60;
-      } else if (nowMinutes > noonBreakEndMinutes && nowMinutes < workEndMinutes) {
-        passedSeconds =
-          (noonBreakStartMinutes - workStartMinutes + (nowMinutes - noonBreakEndMinutes)) * 60;
-      } else {
-        passedSeconds = effectiveWorkSeconds;
-      }
+  let passedSeconds = 0;
+  if (isHaveNoonBreak) {
+    if (nowMinutes <= workStartMinutes) {
+      passedSeconds = 0;
+    } else if (nowMinutes > workStartMinutes && nowMinutes < noonBreakStartMinutes) {
+      passedSeconds = (nowMinutes - workStartMinutes) * 60;
+    } else if (nowMinutes >= noonBreakStartMinutes && nowMinutes <= noonBreakEndMinutes) {
+      passedSeconds = (noonBreakStartMinutes - workStartMinutes) * 60;
+    } else if (nowMinutes > noonBreakEndMinutes && nowMinutes < workEndMinutes) {
+      passedSeconds =
+        (noonBreakStartMinutes - workStartMinutes + (nowMinutes - noonBreakEndMinutes)) * 60;
     } else {
-      if (nowMinutes <= workStartMinutes) {
-        passedSeconds = 0;
-      } else if (nowMinutes > workStartMinutes && nowMinutes < workEndMinutes) {
-        passedSeconds = (nowMinutes - workStartMinutes) * 60;
-      } else {
-        passedSeconds = effectiveWorkSeconds;
-      }
+      passedSeconds = effectiveWorkSeconds;
+    }
+  } else {
+    if (nowMinutes <= workStartMinutes) {
+      passedSeconds = 0;
+    } else if (nowMinutes > workStartMinutes && nowMinutes < workEndMinutes) {
+      passedSeconds = (nowMinutes - workStartMinutes) * 60;
+    } else {
+      passedSeconds = effectiveWorkSeconds;
     }
   }
 
