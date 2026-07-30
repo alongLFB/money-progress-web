@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useRef, useState, useCallback, useEffect } from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import { useApp } from '@/context/AppContext';
 import { useTranslations } from 'next-intl';
-import { Sun, Moon, Coffee } from 'lucide-react';
+import { Sun, Coffee, Clock } from 'lucide-react';
 
 export function Timeline() {
   const t = useTranslations();
@@ -90,28 +90,28 @@ export function Timeline() {
   const nowPct = minutesToPercent(nowMinutes);
 
   return (
-    <div className="w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/80 dark:border-slate-800/80 rounded-3xl p-6 shadow-sm space-y-4">
+    <div className="w-full bg-slate-50/70 dark:bg-slate-800/30 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 space-y-4">
       {/* Header Info */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <Sun className="w-4 h-4 text-amber-500" />
-          <h2 className="text-sm font-bold text-slate-800 dark:text-slate-200">
-            24H Working Timeline (00:00 - 24:00)
+          <Clock className="w-4 h-4 text-blue-500" />
+          <h2 className="text-xs font-bold text-slate-700 dark:text-slate-200">
+            24H 交互时间轴 (00:00 - 24:00)
           </h2>
         </div>
-        <div className="flex items-center gap-4 text-xs font-semibold text-slate-500 dark:text-slate-400">
+        <div className="flex items-center gap-3 text-xs font-semibold text-slate-500 dark:text-slate-400">
           <span className="flex items-center gap-1 text-blue-600 dark:text-blue-400">
-            <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
+            <span className="w-2 h-2 rounded-full bg-blue-500" />
             {t('workAt')}: {minutesToTimeStr(workStartMinutes)}
           </span>
           {isHaveNoonBreak && (
             <span className="flex items-center gap-1 text-amber-600 dark:text-amber-400">
-              <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-              Lunch: {minutesToTimeStr(noonBreakStartMinutes)} - {minutesToTimeStr(noonBreakEndMinutes)}
+              <span className="w-2 h-2 rounded-full bg-amber-500" />
+              午休: {minutesToTimeStr(noonBreakStartMinutes)} - {minutesToTimeStr(noonBreakEndMinutes)}
             </span>
           )}
           <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+            <span className="w-2 h-2 rounded-full bg-emerald-500" />
             {t('offWorkOn')}: {minutesToTimeStr(workEndMinutes)}
           </span>
         </div>
@@ -123,7 +123,7 @@ export function Timeline() {
           ref={containerRef}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
-          className="relative h-10 w-full bg-slate-100 dark:bg-slate-800 rounded-2xl cursor-pointer select-none overflow-visible shadow-inner flex items-center"
+          className="relative h-10 w-full bg-slate-200/80 dark:bg-slate-800 rounded-2xl cursor-pointer select-none overflow-visible shadow-inner flex items-center border border-slate-300/40 dark:border-slate-700/40"
         >
           {/* Hour grid lines & labels */}
           <div className="absolute inset-0 flex justify-between px-1 pointer-events-none">
@@ -164,7 +164,7 @@ export function Timeline() {
             </div>
           )}
 
-          {/* Current Time Pin (Red/Gold Indicator) */}
+          {/* Current Time Pin (Red Indicator) */}
           <div
             className="absolute top-0 bottom-0 w-0.5 bg-rose-500 dark:bg-rose-400 z-10 pointer-events-none shadow-[0_0_8px_rgba(244,63,94,0.8)]"
             style={{ left: `${nowPct}%` }}
@@ -180,10 +180,10 @@ export function Timeline() {
             className="absolute top-1/2 -translate-y-1/2 z-20 cursor-grab active:cursor-grabbing hover:scale-110 transition-transform"
             style={{ left: `calc(${startPct}% - 12px)` }}
           >
-            <div className="w-6 h-10 bg-gradient-to-b from-blue-400 to-blue-600 rounded-xl shadow-lg border-2 border-white flex items-center justify-center text-white">
+            <div className="w-6 h-10 bg-gradient-to-b from-blue-400 to-blue-600 rounded-xl shadow-lg border-2 border-white dark:border-slate-900 flex items-center justify-center text-white">
               <div className="w-1 h-4 bg-white/60 rounded-full" />
             </div>
-            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[11px] font-bold px-1.5 py-0.5 rounded shadow">
+            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[11px] font-bold px-1.5 py-0.5 rounded shadow whitespace-nowrap">
               {minutesToTimeStr(workStartMinutes)}
             </div>
           </div>
@@ -194,10 +194,10 @@ export function Timeline() {
             className="absolute top-1/2 -translate-y-1/2 z-20 cursor-grab active:cursor-grabbing hover:scale-110 transition-transform"
             style={{ left: `calc(${endPct}% - 12px)` }}
           >
-            <div className="w-6 h-10 bg-gradient-to-b from-emerald-400 to-emerald-600 rounded-xl shadow-lg border-2 border-white flex items-center justify-center text-white">
+            <div className="w-6 h-10 bg-gradient-to-b from-emerald-400 to-emerald-600 rounded-xl shadow-lg border-2 border-white dark:border-slate-900 flex items-center justify-center text-white">
               <div className="w-1 h-4 bg-white/60 rounded-full" />
             </div>
-            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-emerald-600 text-white text-[11px] font-bold px-1.5 py-0.5 rounded shadow">
+            <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-emerald-600 text-white text-[11px] font-bold px-1.5 py-0.5 rounded shadow whitespace-nowrap">
               {minutesToTimeStr(workEndMinutes)}
             </div>
           </div>
@@ -210,10 +210,10 @@ export function Timeline() {
                 className="absolute top-1/2 -translate-y-1/2 z-20 cursor-grab active:cursor-grabbing hover:scale-110 transition-transform"
                 style={{ left: `calc(${noonStartPct}% - 10px)` }}
               >
-                <div className="w-5 h-8 bg-gradient-to-b from-amber-400 to-amber-600 rounded-lg shadow-md border border-white flex items-center justify-center">
+                <div className="w-5 h-8 bg-gradient-to-b from-amber-400 to-amber-600 rounded-lg shadow-md border border-white dark:border-slate-900 flex items-center justify-center">
                   <Coffee className="w-2.5 h-2.5 text-white" />
                 </div>
-                <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-amber-600 text-white text-[10px] font-bold px-1 py-0.5 rounded">
+                <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-amber-600 text-white text-[10px] font-bold px-1 py-0.5 rounded whitespace-nowrap">
                   {minutesToTimeStr(noonBreakStartMinutes)}
                 </div>
               </div>
@@ -223,10 +223,10 @@ export function Timeline() {
                 className="absolute top-1/2 -translate-y-1/2 z-20 cursor-grab active:cursor-grabbing hover:scale-110 transition-transform"
                 style={{ left: `calc(${noonEndPct}% - 10px)` }}
               >
-                <div className="w-5 h-8 bg-gradient-to-b from-amber-500 to-amber-700 rounded-lg shadow-md border border-white flex items-center justify-center">
+                <div className="w-5 h-8 bg-gradient-to-b from-amber-500 to-amber-700 rounded-lg shadow-md border border-white dark:border-slate-900 flex items-center justify-center">
                   <Coffee className="w-2.5 h-2.5 text-white" />
                 </div>
-                <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-amber-700 text-white text-[10px] font-bold px-1 py-0.5 rounded">
+                <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-amber-700 text-white text-[10px] font-bold px-1 py-0.5 rounded whitespace-nowrap">
                   {minutesToTimeStr(noonBreakEndMinutes)}
                 </div>
               </div>
@@ -235,7 +235,7 @@ export function Timeline() {
         </div>
 
         {/* Hour Axis Markers Below */}
-        <div className="flex justify-between px-1 text-[10px] font-mono text-slate-400 dark:text-slate-500 pt-5">
+        <div className="flex justify-between px-1 text-[10px] font-mono text-slate-500 dark:text-slate-400 pt-5 font-semibold">
           <span>00:00</span>
           <span>06:00</span>
           <span>12:00</span>

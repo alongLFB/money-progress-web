@@ -26,10 +26,9 @@ export default function Home() {
         <Header />
 
         {showConfig ? (
-          /* Step 1: Configuration Setup Flow */
-          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
+          /* Step 1: Configuration Setup Flow (ConfigPanel embeds Timeline directly above time inputs) */
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
             <ConfigPanel />
-            <Timeline />
           </div>
         ) : (
           /* Step 2: Main Live Progress Dashboard */

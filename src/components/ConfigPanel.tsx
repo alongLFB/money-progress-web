@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { useTranslations } from 'next-intl';
 import { CurrencyModal } from '@/components/CurrencyModal';
-import { DollarSign, Calendar, Clock, Coffee, AlertCircle, Sparkles, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Timeline } from '@/components/Timeline';
+import { DollarSign, Calendar, Clock, Coffee, AlertCircle, Sparkles, CheckCircle2 } from 'lucide-react';
 
 export function ConfigPanel() {
   const t = useTranslations();
@@ -26,7 +27,6 @@ export function ConfigPanel() {
     noonBreakEndMinutes,
     setNoonBreakEndMinutes,
     isWorkTimeValid,
-    isConfigured,
     confirmConfig,
   } = useApp();
 
@@ -85,7 +85,7 @@ export function ConfigPanel() {
             />
             <button
               onClick={() => setIsCurrencyModalOpen(true)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 px-2.5 py-1 text-xs font-bold bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-300 rounded-xl hover:bg-blue-200 dark:hover:bg-blue-800 transition-all cursor-pointer"
+              className="absolute right-2 top-1/2 -translate-y-1/2 px-2.5 py-1 text-xs font-bold bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-300 rounded-xl hover:bg-blue-200 dark:hover:bg-blue-800 transition-all cursor-pointer border border-blue-200/60 dark:border-blue-800/60 shadow-xs"
             >
               {currencyUnit} ⚙️
             </button>
@@ -128,40 +128,44 @@ export function ConfigPanel() {
         </div>
       </div>
 
-      {/* Time Controls */}
+      {/* Time Controls & Timeline Section */}
       <div className="pt-2 border-t border-slate-100 dark:border-slate-800/60 space-y-4">
+        {/* Visual 24H Interactive Timeline placed directly ABOVE time input options */}
+        <Timeline />
+
+        {/* Work Start & End Time Input Pickers */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Work Start */}
-          <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/40 rounded-2xl border border-slate-100 dark:border-slate-800">
+          <div className="flex items-center justify-between p-3.5 bg-slate-50/70 dark:bg-slate-800/40 rounded-2xl border border-slate-200/80 dark:border-slate-800 transition-all hover:border-slate-300 dark:hover:border-slate-700">
             <span className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-              <Clock className="w-3.5 h-3.5 text-blue-500" />
+              <Clock className="w-4 h-4 text-blue-500" />
               {t('workAt')}
             </span>
             <input
               type="time"
               value={minsToTimeString(workStartMinutes)}
               onChange={(e) => setWorkStartMinutes(timeStringToMins(e.target.value))}
-              className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-1 rounded-xl text-sm font-mono font-bold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded-xl text-xs font-mono font-bold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all cursor-pointer"
             />
           </div>
 
           {/* Work End */}
-          <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/40 rounded-2xl border border-slate-100 dark:border-slate-800">
+          <div className="flex items-center justify-between p-3.5 bg-slate-50/70 dark:bg-slate-800/40 rounded-2xl border border-slate-200/80 dark:border-slate-800 transition-all hover:border-slate-300 dark:hover:border-slate-700">
             <span className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-              <Clock className="w-3.5 h-3.5 text-emerald-500" />
+              <Clock className="w-4 h-4 text-emerald-500" />
               {t('offWorkOn')}
             </span>
             <input
               type="time"
               value={minsToTimeString(workEndMinutes)}
               onChange={(e) => setWorkEndMinutes(timeStringToMins(e.target.value))}
-              className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-1 rounded-xl text-sm font-mono font-bold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded-xl text-xs font-mono font-bold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all cursor-pointer"
             />
           </div>
         </div>
 
         {/* Lunch Break Toggle & Pickers */}
-        <div className="p-4 bg-slate-50/70 dark:bg-slate-800/30 rounded-2xl border border-slate-100 dark:border-slate-800/80 space-y-3">
+        <div className="p-4 bg-slate-50/70 dark:bg-slate-800/30 rounded-2xl border border-slate-200/80 dark:border-slate-800 space-y-3">
           <label className="flex items-center gap-3 cursor-pointer select-none">
             <input
               type="checkbox"
@@ -185,7 +189,7 @@ export function ConfigPanel() {
                   type="time"
                   value={minsToTimeString(noonBreakStartMinutes)}
                   onChange={(e) => setNoonBreakStartMinutes(timeStringToMins(e.target.value))}
-                  className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2.5 py-1 rounded-xl text-xs font-mono font-bold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2.5 py-1.5 rounded-xl text-xs font-mono font-bold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer"
                 />
               </div>
 
@@ -197,7 +201,7 @@ export function ConfigPanel() {
                   type="time"
                   value={minsToTimeString(noonBreakEndMinutes)}
                   onChange={(e) => setNoonBreakEndMinutes(timeStringToMins(e.target.value))}
-                  className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2.5 py-1 rounded-xl text-xs font-mono font-bold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-2.5 py-1.5 rounded-xl text-xs font-mono font-bold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer"
                 />
               </div>
             </div>
