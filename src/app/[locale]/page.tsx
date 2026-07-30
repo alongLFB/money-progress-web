@@ -8,10 +8,10 @@ import { ConfigPanel } from '@/components/ConfigPanel';
 import { LiveDashboard } from '@/components/LiveDashboard';
 import { MenuBarWidget } from '@/components/MenuBarWidget';
 import { useApp } from '@/context/AppContext';
-import { useLocale } from 'next-intl';
+import { useTranslations } from 'next-intl';
 
 export default function Home() {
-  const locale = useLocale();
+  const t = useTranslations();
   const { isConfigured, isEditingConfig } = useApp();
 
   const showConfig = !isConfigured || isEditingConfig;
@@ -44,11 +44,11 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="w-full max-w-4xl text-center py-6 text-xs text-slate-500 dark:text-slate-400 space-y-1 z-10 border-t border-slate-200/40 dark:border-slate-800/40 mt-8">
-        <p>
-          钱条 (Money Progress) Web Edition • {locale === 'zh' ? '上班的进度条，开始搬砖吧。' : 'Work progress bar, start earning today.'}
+        <p className="font-medium">
+          {t('appName')} ({t('webEdition')}) • {t('footerTagline')}
         </p>
         <p className="opacity-75">
-          Inspired by Lakr Aream&apos;s MoneyProgress macOS App. Built with Next.js 16 &amp; next-intl.
+          {t('footerCredits')}
         </p>
       </footer>
     </main>

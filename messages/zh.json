@@ -1,6 +1,7 @@
 {
   "appName": "钱条",
   "tagline": "挣钱的进度条，得是老板给我的欠条。",
+  "webEdition": "网页版",
   "monthlySalary": "月薪",
   "salaryPlaceholder": "这条子够长了吧",
   "oneMonthWork": "一个月工作",
@@ -60,5 +61,19 @@
   "reconfigure": "⚙️ 修改配置",
   "setupTitle": "🛠️ 薪资与工时设置",
   "setupSubtitle": "输入您的薪资和上下班时间，系统将为您实时计算每一秒的摸鱼收益与进度。",
-  "backToDashboard": "📊 返回摸鱼进度仪表盘"
+  "backToDashboard": "📊 返回摸鱼进度仪表盘",
+  "dailyEarnings": "日均收入",
+  "daysPerMonth": "{days} 天/月",
+  "effectiveHoursTitle": "日有效工时",
+  "hoursPerDay": "小时/天",
+  "ratePerSecondTitle": "秒薪流速",
+  "liveRate": "实时流速",
+  "perSecRate": "+{amount} {unit}/秒",
+  "realtimeCalc": "实时计算",
+  "timelineTitle": "24小时工时时间轴 (00:00 - 24:00)",
+  "timelineLocked": "🔒 锁定中 (点击修改配置可调整)",
+  "lunchBreak": "午休",
+  "nowTime": "当前 {time}",
+  "footerTagline": "上班的进度条，开始搬砖吧。",
+  "footerCredits": "灵感来源于 Lakr Aream 的 macOS 原生应用 MoneyProgress。由 Next.js 16 与 next-intl 驱动。"
 }

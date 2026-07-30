@@ -107,10 +107,10 @@ export function Timeline({ interactive }: TimelineProps) {
         <div className="flex items-center gap-2">
           <Clock className="w-4 h-4 text-blue-500" />
           <h2 className="text-xs font-bold text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
-            24H 交互时间轴 (00:00 - 24:00)
+            {t('timelineTitle')}
             {!isInteractive && (
               <span className="text-[10px] font-normal px-2 py-0.5 rounded-full bg-slate-200/80 dark:bg-slate-700 text-slate-500 dark:text-slate-400 flex items-center gap-1">
-                <Lock className="w-2.5 h-2.5" /> 锁定中 (修改配置可调整)
+                <Lock className="w-2.5 h-2.5" /> {t('timelineLocked')}
               </span>
             )}
           </h2>
@@ -123,7 +123,7 @@ export function Timeline({ interactive }: TimelineProps) {
           {isHaveNoonBreak && (
             <span className="flex items-center gap-1 text-amber-600 dark:text-amber-400">
               <span className="w-2 h-2 rounded-full bg-amber-500" />
-              午休: {minutesToTimeStr(noonBreakStartMinutes)} - {minutesToTimeStr(noonBreakEndMinutes)}
+              {t('lunchBreak')}: {minutesToTimeStr(noonBreakStartMinutes)} - {minutesToTimeStr(noonBreakEndMinutes)}
             </span>
           )}
           <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
@@ -188,7 +188,7 @@ export function Timeline({ interactive }: TimelineProps) {
             style={{ left: `${nowPct}%` }}
           >
             <div className="absolute -top-5 -translate-x-1/2 bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-md whitespace-nowrap">
-              Now {minutesToTimeStr(nowMinutes)}
+              {t('nowTime', { time: minutesToTimeStr(nowMinutes) })}
             </div>
           </div>
 

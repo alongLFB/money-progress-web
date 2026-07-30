@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { useTranslations } from 'next-intl';
 import confetti from 'canvas-confetti';
-import { Sparkles, TrendingUp, Clock, Coins, Flame } from 'lucide-react';
+import { TrendingUp, Clock, Coins, Flame } from 'lucide-react';
 
 export function LiveDashboard() {
   const t = useTranslations();
@@ -114,7 +114,7 @@ export function LiveDashboard() {
             </span>
             <span className="flex items-center gap-1 text-emerald-400 font-semibold">
               <Flame className="w-3.5 h-3.5 text-amber-400 animate-bounce" />
-              +{formattedCoinPerSecond} {currencyUnit}/sec
+              {t('perSecRate', { amount: formattedCoinPerSecond, unit: currencyUnit })}
             </span>
           </div>
         </div>
@@ -127,10 +127,10 @@ export function LiveDashboard() {
           <div className="flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400">
             <span className="flex items-center gap-1.5">
               <Coins className="w-4 h-4 text-amber-500" />
-              Daily Earnings
+              {t('dailyEarnings')}
             </span>
             <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-300 font-bold">
-              {dayWorkOfMonth} Days/Mo
+              {t('daysPerMonth', { days: dayWorkOfMonth })}
             </span>
           </div>
           <div className="text-sm font-semibold text-slate-800 dark:text-slate-200">
@@ -143,10 +143,10 @@ export function LiveDashboard() {
           <div className="flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400">
             <span className="flex items-center gap-1.5">
               <Clock className="w-4 h-4 text-blue-500" />
-              Effective Hours
+              {t('effectiveHoursTitle')}
             </span>
             <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-300 font-bold">
-              Hours/Day
+              {t('hoursPerDay')}
             </span>
           </div>
           <div className="text-sm font-semibold text-slate-800 dark:text-slate-200">
@@ -159,10 +159,10 @@ export function LiveDashboard() {
           <div className="flex items-center justify-between text-xs font-bold text-slate-500 dark:text-slate-400">
             <span className="flex items-center gap-1.5">
               <TrendingUp className="w-4 h-4 text-emerald-500" />
-              Rate Per Second
+              {t('ratePerSecondTitle')}
             </span>
             <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-300 font-bold">
-              Live Rate
+              {t('liveRate')}
             </span>
           </div>
           <div className="text-sm font-semibold text-slate-800 dark:text-slate-200">

@@ -1,6 +1,7 @@
 {
   "appName": "Money Progress",
   "tagline": "The progress bar for earning money must be an IOU from my boss.",
+  "webEdition": "Web Edition",
   "monthlySalary": "Monthly salary",
   "salaryPlaceholder": "This piece is long enough",
   "oneMonthWork": "One month's work",
@@ -60,5 +61,19 @@
   "reconfigure": "⚙️ Reconfigure",
   "setupTitle": "🛠️ Salary & Work Hours Setup",
   "setupSubtitle": "Enter your salary and working hours to calculate live earnings per second and progress.",
-  "backToDashboard": "📊 Back to Progress Dashboard"
+  "backToDashboard": "📊 Back to Progress Dashboard",
+  "dailyEarnings": "Daily Earnings",
+  "daysPerMonth": "{days} Days/Mo",
+  "effectiveHoursTitle": "Effective Hours",
+  "hoursPerDay": "Hours/Day",
+  "ratePerSecondTitle": "Rate Per Second",
+  "liveRate": "Live Rate",
+  "perSecRate": "+{amount} {unit}/sec",
+  "realtimeCalc": "Real-time",
+  "timelineTitle": "24H Work Timeline (00:00 - 24:00)",
+  "timelineLocked": "🔒 Locked (Click Reconfigure to edit)",
+  "lunchBreak": "Lunch",
+  "nowTime": "Now {time}",
+  "footerTagline": "Work progress bar, start earning today.",
+  "footerCredits": "Inspired by Lakr Aream's MoneyProgress macOS App. Built with Next.js 16 & next-intl."
 }
