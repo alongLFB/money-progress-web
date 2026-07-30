@@ -43,5 +43,10 @@
   "lightMode": "浅色模式",
   "darkMode": "深色模式",
   "switchTheme": "切换主题",
-  "switchLanguage": "切换语言"
+  "switchLanguage": "切换语言",
+  "startTracking": "🚀 保存设置，开始摸鱼计价！",
+  "reconfigure": "⚙️ 修改配置",
+  "setupTitle": "🛠️ 薪资与工时设置",
+  "setupSubtitle": "输入您的薪资和上下班时间，系统将为您实时计算每一秒的摸鱼收益与进度。",
+  "backToDashboard": "📊 返回摸鱼进度仪表盘"
 }

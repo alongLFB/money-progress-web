@@ -25,6 +25,12 @@ interface AppContextType {
   setMenubarRunning: (val: boolean) => void;
   restoreDefault: () => void;
   
+  // Setup Wizard State & Actions
+  isConfigured: boolean;
+  isEditingConfig: boolean;
+  confirmConfig: () => void;
+  openConfig: () => void;
+
   // Real-time calculated properties
   effectiveWorkSeconds: number;
   effectiveWorkHours: number;
@@ -50,12 +56,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [compactMode, setCompactMode] = useState<boolean>(false);
   const [menubarRunning, setMenubarRunning] = useState<boolean>(true);
 
+  // Wizard state
+  const [isConfigured, setIsConfigured] = useState<boolean>(false);
+  const [isEditingConfig, setIsEditingConfig] = useState<boolean>(false);
+
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
 
   // Load stored settings on mount
   useEffect(() => {
     setCurrentTime(new Date());
     try {
+      const sConfigured = localStorage.getItem('money_progress_configured');
       const sWorkStart = localStorage.getItem('money_progress_work_start');
       const sWorkEnd = localStorage.getItem('money_progress_work_end');
       const sNoonBreak = localStorage.getItem('money_progress_noon_break');
@@ -66,6 +77,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       const sCurrency = localStorage.getItem('money_progress_currency');
       const sCompact = localStorage.getItem('money_progress_compact');
       const sMenubar = localStorage.getItem('money_progress_menubar');
+
+      if (sConfigured === 'true') {
+        setIsConfigured(true);
+      } else {
+        setIsConfigured(false);
+      }
 
       if (sWorkStart !== null) setWorkStartMinutes(Number(sWorkStart));
       if (sWorkEnd !== null) setWorkEndMinutes(Number(sWorkEnd));
@@ -106,6 +123,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     compactMode,
     menubarRunning,
   ]);
+
+  const confirmConfig = useCallback(() => {
+    setIsConfigured(true);
+    setIsEditingConfig(false);
+    localStorage.setItem('money_progress_configured', 'true');
+  }, []);
+
+  const openConfig = useCallback(() => {
+    setIsEditingConfig(true);
+  }, []);
 
   // Fast timer ticker for real-time progress update (100ms for smooth fluid ticking!)
   useEffect(() => {
@@ -211,6 +238,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         menubarRunning,
         setMenubarRunning,
         restoreDefault,
+        isConfigured,
+        isEditingConfig,
+        confirmConfig,
+        openConfig,
         effectiveWorkSeconds,
         effectiveWorkHours,
         coinPerDay,

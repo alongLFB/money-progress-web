@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { useTranslations } from 'next-intl';
 import { CurrencyModal } from '@/components/CurrencyModal';
-import { DollarSign, Calendar, Clock, Coffee, AlertCircle, Sparkles } from 'lucide-react';
+import { DollarSign, Calendar, Clock, Coffee, AlertCircle, Sparkles, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export function ConfigPanel() {
   const t = useTranslations();
@@ -26,6 +26,8 @@ export function ConfigPanel() {
     noonBreakEndMinutes,
     setNoonBreakEndMinutes,
     isWorkTimeValid,
+    isConfigured,
+    confirmConfig,
   } = useApp();
 
   const [isCurrencyModalOpen, setIsCurrencyModalOpen] = useState(false);
@@ -44,15 +46,20 @@ export function ConfigPanel() {
 
   const isSalaryInvalid = monthPaid < 0;
   const isDaysInvalid = dayWorkOfMonth < 1 || dayWorkOfMonth > 31;
+  const canSave = isWorkTimeValid && !isSalaryInvalid && !isDaysInvalid;
 
   return (
-    <div className="w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/80 dark:border-slate-800/80 rounded-3xl p-6 shadow-sm space-y-6">
-      <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
-        <h2 className="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-blue-500" />
-          薪资与工时设置
-        </h2>
-        <span className="text-xs text-slate-400">实时计算</span>
+    <div className="w-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/80 dark:border-slate-800/80 rounded-3xl p-6 shadow-lg space-y-6 animate-in fade-in zoom-in-95 duration-300">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4 gap-2">
+        <div>
+          <h2 className="text-lg font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-amber-500" />
+            {t('setupTitle')}
+          </h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            {t('setupSubtitle')}
+          </p>
+        </div>
       </div>
 
       {/* Salary & Currency Inputs Grid */}
@@ -206,6 +213,22 @@ export function ConfigPanel() {
             </div>
           </div>
         )}
+      </div>
+
+      {/* Primary Action Button: Start Pricing & Tracking */}
+      <div className="pt-2">
+        <button
+          onClick={confirmConfig}
+          disabled={!canSave}
+          className={`w-full py-4 px-6 rounded-2xl font-bold text-base shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer ${
+            canSave
+              ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-amber-500 hover:opacity-95 text-white shadow-blue-500/25 active:scale-[0.99]'
+              : 'bg-slate-200 dark:bg-slate-800 text-slate-400 cursor-not-allowed'
+          }`}
+        >
+          <CheckCircle2 className="w-5 h-5" />
+          <span>{t('startTracking')}</span>
+        </button>
       </div>
 
       {/* Currency Modal */}

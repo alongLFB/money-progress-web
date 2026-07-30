@@ -7,10 +7,14 @@ import { Timeline } from '@/components/Timeline';
 import { ConfigPanel } from '@/components/ConfigPanel';
 import { LiveDashboard } from '@/components/LiveDashboard';
 import { MenuBarWidget } from '@/components/MenuBarWidget';
+import { useApp } from '@/context/AppContext';
 import { useLocale } from 'next-intl';
 
 export default function Home() {
   const locale = useLocale();
+  const { isConfigured, isEditingConfig } = useApp();
+
+  const showConfig = !isConfigured || isEditingConfig;
 
   return (
     <main className="relative min-h-screen flex flex-col items-center justify-between p-4 sm:p-6 md:p-8 overflow-x-hidden">
@@ -21,14 +25,19 @@ export default function Home() {
         {/* Header Bar */}
         <Header />
 
-        {/* Real-time Dashboard */}
-        <LiveDashboard />
-
-        {/* Interactive 24-Hour Timeline */}
-        <Timeline />
-
-        {/* Configuration Panel */}
-        <ConfigPanel />
+        {showConfig ? (
+          /* Step 1: Configuration Setup Flow */
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
+            <ConfigPanel />
+            <Timeline />
+          </div>
+        ) : (
+          /* Step 2: Main Live Progress Dashboard */
+          <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300">
+            <LiveDashboard />
+            <Timeline />
+          </div>
+        )}
       </div>
 
       {/* Floating Status Bar Widget Simulation */}

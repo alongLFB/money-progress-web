@@ -43,5 +43,10 @@
   "lightMode": "Light Mode",
   "darkMode": "Dark Mode",
   "switchTheme": "Switch Theme",
-  "switchLanguage": "Switch Language"
+  "switchLanguage": "Switch Language",
+  "startTracking": "🚀 Save & Start Pricing!",
+  "reconfigure": "⚙️ Reconfigure",
+  "setupTitle": "🛠️ Salary & Work Hours Setup",
+  "setupSubtitle": "Enter your salary and working hours to calculate live earnings per second and progress.",
+  "backToDashboard": "📊 Back to Progress Dashboard"
 }

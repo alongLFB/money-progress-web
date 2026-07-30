@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useTransition } from 'react';
-import { Sun, Moon, Languages, RotateCcw, Maximize2, Minimize2, Pin, PinOff } from 'lucide-react';
+import { Sun, Moon, Languages, RotateCcw, Maximize2, Minimize2, Pin, PinOff, Settings, LayoutDashboard } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter, usePathname } from '@/i18n/routing';
 import { useApp } from '@/context/AppContext';
@@ -14,7 +14,17 @@ export function Header() {
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
 
-  const { compactMode, setCompactMode, restoreDefault, menubarRunning, setMenubarRunning } = useApp();
+  const {
+    compactMode,
+    setCompactMode,
+    restoreDefault,
+    menubarRunning,
+    setMenubarRunning,
+    isConfigured,
+    isEditingConfig,
+    openConfig,
+    confirmConfig,
+  } = useApp();
   const { theme, toggleTheme } = useTheme();
 
   const handleLanguageChange = (nextLocale: 'zh' | 'en') => {
@@ -27,7 +37,7 @@ export function Header() {
     <header className="w-full max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 py-4 px-6 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border border-slate-200/80 dark:border-slate-800/80 rounded-3xl shadow-sm transition-all">
       {/* Brand & Subtitle */}
       <div className="flex items-center gap-4 text-center sm:text-left">
-        <div className="relative group">
+        <div className="relative group cursor-pointer" onClick={isEditingConfig ? confirmConfig : openConfig}>
           <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-400 via-orange-500 to-yellow-500 flex items-center justify-center text-3xl shadow-lg shadow-orange-500/20 group-hover:scale-105 transition-transform duration-300">
             💰
           </div>
@@ -51,6 +61,30 @@ export function Header() {
 
       {/* Control Actions */}
       <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-end">
+        {/* Reconfigure / Toggle Config Button */}
+        {isConfigured && (
+          <button
+            onClick={isEditingConfig ? confirmConfig : openConfig}
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl border transition-all cursor-pointer shadow-xs ${
+              isEditingConfig
+                ? 'bg-amber-500 text-white border-amber-600 shadow-amber-500/20'
+                : 'bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700'
+            }`}
+          >
+            {isEditingConfig ? (
+              <>
+                <LayoutDashboard className="w-3.5 h-3.5" />
+                <span>{t('backToDashboard')}</span>
+              </>
+            ) : (
+              <>
+                <Settings className="w-3.5 h-3.5 text-amber-500" />
+                <span>{t('reconfigure')}</span>
+              </>
+            )}
+          </button>
+        )}
+
         {/* Dark / Light Theme Toggle */}
         <button
           onClick={toggleTheme}
