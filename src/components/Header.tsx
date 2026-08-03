@@ -25,7 +25,7 @@ export function Header() {
     openConfig,
     confirmConfig,
   } = useApp();
-  const { theme, toggleTheme } = useTheme();
+  const { theme, toggleTheme, isMounted } = useTheme();
 
   const handleLanguageChange = (nextLocale: 'zh' | 'en') => {
     startTransition(() => {
@@ -85,19 +85,21 @@ export function Header() {
         {/* Dark / Light Theme Toggle */}
         <button
           onClick={toggleTheme}
-          title={theme === 'dark' ? t('lightMode') : t('darkMode')}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-xl border bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all cursor-pointer shadow-xs"
+          title={isMounted ? (theme === 'dark' ? t('lightMode') : t('darkMode')) : ''}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-xl border bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all cursor-pointer shadow-xs min-w-[90px] justify-center"
         >
-          {theme === 'dark' ? (
+          {isMounted && theme === 'dark' ? (
             <>
               <Sun className="w-4 h-4 text-amber-400" />
               <span>{t('lightMode')}</span>
             </>
-          ) : (
+          ) : isMounted ? (
             <>
               <Moon className="w-4 h-4 text-indigo-500" />
               <span>{t('darkMode')}</span>
             </>
+          ) : (
+            <div className="w-14 h-4" />
           )}
         </button>
 
