@@ -12,7 +12,7 @@ import { useTranslations } from 'next-intl';
 
 export default function Home() {
   const t = useTranslations();
-  const { isConfigured, isEditingConfig } = useApp();
+  const { isConfigured, isEditingConfig, compactMode } = useApp();
 
   const showConfig = !isConfigured || isEditingConfig;
 
@@ -21,7 +21,9 @@ export default function Home() {
       {/* Dynamic Animated Ambient Background */}
       <BackgroundGlow />
 
-      <div className="w-full max-w-4xl space-y-6 z-10">
+      <div className={`w-full transition-all duration-300 z-10 ${
+        compactMode ? 'max-w-2xl space-y-4' : 'max-w-4xl space-y-6'
+      }`}>
         {/* Header Bar */}
         <Header />
 
@@ -32,7 +34,9 @@ export default function Home() {
           </div>
         ) : (
           /* Step 2: Main Live Progress Dashboard */
-          <div className="space-y-6 animate-in fade-in zoom-in-95 duration-300">
+          <div className={`transition-all duration-300 animate-in fade-in zoom-in-95 ${
+            compactMode ? 'space-y-4' : 'space-y-6'
+          }`}>
             <LiveDashboard />
             <Timeline interactive={false} />
           </div>

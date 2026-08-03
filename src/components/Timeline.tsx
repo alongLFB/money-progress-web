@@ -25,6 +25,7 @@ export function Timeline({ interactive }: TimelineProps) {
     isConfigured,
     isEditingConfig,
     isMounted,
+    compactMode,
   } = useApp();
 
   // Dragging is enabled ONLY during setup/editing phase, or if explicitly enabled
@@ -102,7 +103,9 @@ export function Timeline({ interactive }: TimelineProps) {
   const nowPct = minutesToPercent(nowMinutes);
 
   return (
-    <div className="w-full bg-slate-50/70 dark:bg-slate-800/30 border border-slate-200/80 dark:border-slate-800 rounded-2xl p-5 space-y-4">
+    <div className={`w-full bg-slate-50/70 dark:bg-slate-800/30 border border-slate-200/80 dark:border-slate-800 shadow-xs transition-all duration-300 ${
+      compactMode ? 'p-3.5 rounded-xl space-y-2' : 'p-5 rounded-2xl space-y-4'
+    }`}>
       {/* Header Info */}
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2">
