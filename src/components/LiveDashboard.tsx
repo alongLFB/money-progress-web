@@ -66,11 +66,11 @@ export function LiveDashboard() {
       compactMode ? 'p-4 rounded-2xl space-y-4' : 'p-6 rounded-3xl space-y-6'
     }`}>
       {/* Real-time Progress Bar Card */}
-      <div className={`relative overflow-hidden bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white rounded-2xl shadow-xl border border-slate-800/80 transition-all duration-300 ${
+      <div className={`relative overflow-hidden bg-gradient-to-br from-indigo-600 via-blue-600 to-purple-700 dark:from-slate-900 dark:via-indigo-950 dark:to-slate-900 text-white rounded-2xl shadow-xl shadow-blue-500/10 dark:shadow-slate-950/40 border border-indigo-400/30 dark:border-slate-800/80 transition-all duration-300 ${
         compactMode ? 'p-4 space-y-3' : 'p-6 space-y-4'
       }`}>
         {/* Glow effect behind */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 dark:bg-blue-500/10 blur-3xl pointer-events-none" />
 
         <div className={`relative z-10 ${compactMode ? 'space-y-3' : 'space-y-4'}`}>
           <div className="flex items-center justify-between gap-2">
@@ -84,42 +84,42 @@ export function LiveDashboard() {
                     ? t('fullSalaryEarned')
                     : quotes[quoteIndex]}
                 </h3>
-                <p className="text-xs text-slate-400 font-mono">
+                <p className="text-xs text-indigo-100 dark:text-slate-400 font-mono">
                   {t('todaysProgress')} • {formattedPercent}%
                 </p>
               </div>
             </div>
 
             <div className="text-right font-mono shrink-0">
-              <span className={`font-extrabold text-amber-400 tracking-tight block ${compactMode ? 'text-xl' : 'text-2xl'}`}>
+              <span className={`font-extrabold text-amber-300 dark:text-amber-400 tracking-tight block ${compactMode ? 'text-xl' : 'text-2xl'}`}>
                 {currencyUnit} {formattedEarned}
               </span>
-              <span className="block text-[11px] text-slate-400">
+              <span className="block text-[11px] text-indigo-200 dark:text-slate-400">
                 / {currencyUnit} {formattedCoinPerDay}
               </span>
             </div>
           </div>
 
           {/* Animated Progress Bar */}
-          <div className={`relative w-full bg-slate-800/90 rounded-full overflow-hidden border border-slate-700/60 ${
+          <div className={`relative w-full bg-indigo-950/40 dark:bg-slate-800/90 rounded-full overflow-hidden border border-white/20 dark:border-slate-700/60 ${
             compactMode ? 'h-3 p-0.5' : 'h-4 p-0.5'
           }`}>
             <div
-              className="h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-emerald-400 rounded-full transition-all duration-300 relative"
+              className="h-full bg-gradient-to-r from-amber-300 via-emerald-300 to-emerald-400 dark:from-blue-500 dark:via-indigo-500 dark:to-emerald-400 rounded-full transition-all duration-300 relative"
               style={{ width: `${Math.max(2, Math.min(100, todayPercent * 100))}%` }}
             >
               <div className="absolute inset-0 bg-white/20 animate-pulse rounded-full" />
             </div>
           </div>
 
-          <div className="flex items-center justify-between text-xs text-slate-400 pt-0.5 font-medium">
+          <div className="flex items-center justify-between text-xs text-indigo-100 dark:text-slate-400 pt-0.5 font-medium">
             <span>
               {compactMode
                 ? t('compactEarned', { amount: formattedEarned, unit: currencyUnit })
                 : t('earnedToday', { amount: formattedEarned, unit: currencyUnit })}
             </span>
-            <span className="flex items-center gap-1 text-emerald-400 font-semibold">
-              <Flame className="w-3.5 h-3.5 text-amber-400 animate-bounce" />
+            <span className="flex items-center gap-1 text-emerald-300 dark:text-emerald-400 font-semibold">
+              <Flame className="w-3.5 h-3.5 text-amber-300 dark:text-amber-400 animate-bounce" />
               {t('perSecRate', { amount: formattedCoinPerSecond, unit: currencyUnit })}
             </span>
           </div>

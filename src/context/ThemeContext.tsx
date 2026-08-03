@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 export type Theme = 'light' | 'dark';
 
@@ -14,12 +15,28 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>('light');
+  const pathname = usePathname();
 
   useEffect(() => {
-    // Read the current class set by the blocking inline script in <head>
-    const isDark = document.documentElement.classList.contains('dark');
-    setThemeState(isDark ? 'dark' : 'light');
+    // Read the saved theme or current dark class
+    const saved = localStorage.getItem('money_progress_theme');
+    if (saved === 'dark' || saved === 'light') {
+      setThemeState(saved);
+    } else {
+      const isDark = document.documentElement.classList.contains('dark');
+      setThemeState(isDark ? 'dark' : 'light');
+    }
   }, []);
+
+  // Continuously sync class to document.documentElement whenever theme state or pathname (route/locale) changes
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('money_progress_theme', theme);
+  }, [theme, pathname]);
 
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
