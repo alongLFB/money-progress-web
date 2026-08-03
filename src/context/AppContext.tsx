@@ -51,8 +51,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [isHaveNoonBreak, setIsHaveNoonBreak] = useState<boolean>(false);
   const [noonBreakStartMinutes, setNoonBreakStartMinutes] = useState<number>(12 * 60); // 12:00
   const [noonBreakEndMinutes, setNoonBreakEndMinutes] = useState<number>(14 * 60); // 14:00
-  const [monthPaid, setMonthPaid] = useState<number>(20000);
-  const [dayWorkOfMonth, setDayWorkOfMonth] = useState<number>(20);
+  const [monthPaid, setMonthPaid] = useState<number>(3000);
+  const [dayWorkOfMonth, setDayWorkOfMonth] = useState<number>(22);
   const [currencyUnit, setCurrencyUnit] = useState<string>('CNY');
   const [compactMode, setCompactMode] = useState<boolean>(false);
   const [menubarRunning, setMenubarRunning] = useState<boolean>(true);
