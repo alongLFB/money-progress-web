@@ -14,29 +14,35 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('light');
   const pathname = usePathname();
 
-  useEffect(() => {
-    // Read the saved theme or current dark class
-    const saved = localStorage.getItem('money_progress_theme');
-    if (saved === 'dark' || saved === 'light') {
-      setThemeState(saved);
-    } else {
-      const isDark = document.documentElement.classList.contains('dark');
-      setThemeState(isDark ? 'dark' : 'light');
+  // Lazily initialize state from localStorage or documentElement on client side
+  const [theme, setThemeState] = useState<Theme>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('money_progress_theme');
+      if (saved === 'dark' || saved === 'light') {
+        return saved;
+      }
+      return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
     }
-  }, []);
+    return 'light';
+  });
 
-  // Continuously sync class to document.documentElement whenever theme state or pathname (route/locale) changes
+  // Ensure DOM class and localStorage match theme state on mount & route changes
   useEffect(() => {
-    if (theme === 'dark') {
+    const saved = localStorage.getItem('money_progress_theme') as Theme | null;
+    const activeTheme = saved || theme;
+
+    if (activeTheme === 'dark') {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
-    localStorage.setItem('money_progress_theme', theme);
-  }, [theme, pathname]);
+
+    if (activeTheme !== theme) {
+      setThemeState(activeTheme);
+    }
+  }, [pathname, theme]);
 
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
@@ -49,7 +55,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   };
 
   const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
+    const nextTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(nextTheme);
   };
 
   return (
